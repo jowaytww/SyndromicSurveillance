@@ -95,4 +95,4 @@ def runClusterAnalysis(datafile,maxdistance=100,minneighbors=2,start_date=None,e
     gdf = gpd.GeoDataFrame(pd.DataFrame(ids,columns=['id']), geometry=geometries,crs={'init': 'epsg:26917'})
     gdf.to_file(datafile.replace('.csv','')+"_shapes__"+str(maxdistance)+"_"+str(minneighbors)+'.shp') 
 
-runClusterAnalysis(r'E:/data-1590796735022.csv',maxdistance=1000,minneighbors=10)      
+#runClusterAnalysis(r'E:/data-1590796735022.csv',maxdistance=1000,minneighbors=10)      
