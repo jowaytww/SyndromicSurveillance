@@ -5,7 +5,7 @@ Created on Wed Apr 29 14:28:14 2020
 @author: Jayakrishnan Ajayakumar
 @contributor: Eric Hixson
 @contributor: Sudha Sarupuru
-@contributor: Ravanth Talasila
+@contributor: Revanth Talasila
 @contributor: Shalini Gandhi
 @contributor: Jian Zhu
 
@@ -25,21 +25,21 @@ from dateutil import parser
 #accepts a csv file with headers lat,lon,date. maxdistance is the distance for a neighbor relation, minneighbors is the
 #minimum number of points for a cluster,start_date is the beginning date for grouping clusters by time (if None will automatically assign the first date from the dataset)
 #end_date is the last date for grouping clusters by time. By default it is the current date
-def runClusterAnalysis(datafile,maxdistance=100,minneighbors=2,start_date=None,end_date=datetime.datetime.now().date()):
+def runClusterAnalysis(datafile_in,maxdistance=100,minneighbors=2,start_date=None,end_date=datetime.datetime.now().date()):
     #data file path
-    datafile=r'C:\File\GISFile.csv'
+    datafile=datafile_in
     data=pd.read_csv(datafile)
     if not datafile.endswith('.csv'):
         print ('Only accepts csv file')
         return None
     data=pd.read_csv(datafile)
-    if not ('lon' in data.columns and 'lat' in data.columns and 'date' in data.columns):
+    if not ('lon' in data.columns and 'lat' in data.columns and 'Date' in data.columns):
         print ('Data file should have columns lat,lon,date')
         return None
-    data.date=[parser.parse(t).date() for t in data.date]
+    data.Date=[parser.parse(t).date() for t in data.Date]
     start_date=None
     if start_date is None:
-        start_date=np.min(data.date.values)
+        start_date=np.min(data.Date.values)
     #headers for the cluster file
     recheader=['id','centroid_x','centroid_y']
     end_date=datetime.datetime.now().date()
@@ -56,7 +56,7 @@ def runClusterAnalysis(datafile,maxdistance=100,minneighbors=2,start_date=None,e
     data=data.drop(columns=['geometry'])
     xy=data[['x','y']].values
     latlon=data[['lon','lat']].values
-    dates=data['date'].values
+    dates=data['Date'].values
     #empty data frame for storing clusters
     clusterData=pd.DataFrame(columns=recheader)
     #run DB scan clustering algorithm
@@ -66,6 +66,7 @@ def runClusterAnalysis(datafile,maxdistance=100,minneighbors=2,start_date=None,e
     total_clusters = len(set(labels))
     k=0
     geometries=[]
+    geometries_line=[]
     ids=[]
     #for each cluster get the members and group by date
     for i in range(total_clusters):
@@ -97,19 +98,20 @@ def runClusterAnalysis(datafile,maxdistance=100,minneighbors=2,start_date=None,e
             if geom_hull.geom_type!='Polygon':
                 geom_hull=geom_hull.buffer(maxdistance)
             #create polygon objects
+            geom_line=geom_hull.boundary
             geometries.append(geom_hull)
             #create line-string objects
             geometries_line.append(geom_line)
             dat.extend(tdframe.counts.values.tolist())
             clusterData.loc[len(clusterData)]=dat
             k+=1
-    #write cluster data to csv file
-    clusterData.to_csv(datafile.replace('.csv','')+"_centroids_"+str(maxdistance)+"_"+str(minneighbors)+'.csv',index=False)
-    #write cluster shapes and line shapes to separate CSV files
-    gdf = gpd.GeoDataFrame(pd.DataFrame(ids,columns=['id']), geometry=geometries,crs={'init': 'epsg:26917'})
-    gdf_line = gpd.GeoDataFrame(pd.DataFrame(ids,columns=['id']), geometry=geometries_line,crs={'init': 'epsg:26917'})
-    gdf.to_file(datafile.replace('.csv','')+"_shapes_"+str(maxdistance)+"_"+str(minneighbors)+'.shp')
-    gdf_line.to_file(datafile.replace('.csv','')+"_shapes_linestring_"+str(maxdistance)+"_"+str(minneighbors)+'.shp')
+            #write cluster data to csv file
+            clusterData.to_csv(datafile.replace('.csv','')+"_centroids_"+str(maxdistance)+"_"+str(minneighbors)+'.csv',index=False)
+            #write cluster shapes and line shapes to separate CSV files
+            gdf = gpd.GeoDataFrame(pd.DataFrame(ids,columns=['id']), geometry=geometries,crs={'init': 'epsg:26917'})
+            gdf_line = gpd.GeoDataFrame(pd.DataFrame(ids,columns=['id']), geometry=geometries_line,crs={'init': 'epsg:26917'})
+            gdf.to_file(datafile.replace('.csv','')+"_shapes_"+str(maxdistance)+"_"+str(minneighbors)+'.shp')
+            gdf_line.to_file(datafile.replace('.csv','')+"_shapes_linestring_"+str(maxdistance)+"_"+str(minneighbors)+'.shp')
 
 #Test
 #runClusterAnalysis(r'E:/data-1590796735022.csv',maxdistance=1000,minneighbors=10)      
