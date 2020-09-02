@@ -3,7 +3,7 @@
 ## Disclosure
 This analytical engine is in active development.
 
-## What this program does
+## Methodologies
 This project leverages a spatial database and two types of clustering algorithms to identify emerging  patterns of COVID-19 patients that local healthcare providers and health departments can use for rapid response and resource deployment efforts.  See https://www.researchsquare.com/article/rs-39862/v1 for a detailed discussion of the project.
 
 ## How to use the program
@@ -24,6 +24,11 @@ The program accommodates a single cluster definition.  Consequently, it must be 
 
 ## Output data
 Cluster results are generated both as convex hull polygons and as line shape objects to accommodate different visualization tool requirements.
+
+## Validating your own installation
+The cluster_validation folder contains a synthetic data set of lon/lat points in Cuyahoga County Ohio, USA and the density clustering (DBSCAN) results. A base population was generated from a 1% sample of data originally retrieved from [http://geo.oit.ohio.gov/arcgis/](http://geo.oit.ohio.gov/arcgis/rest/services/LBRS/Cuyahoga_LBRS/FeatureServer/0).
+
+Three (3) .csv data source files are included - ‘21day’, ’14day’, and ‘7day’.  These are successive 75% down-samplings from the base to derive a sufficient number of cluster objects to simulate the temporal relationships in multiple look-back time periods.
 
 ## Preferred Reference for Citation
 Geographic Monitoring for Early Disease Detection (GeoMEDD) Code Repository. Developer Documentation [Internet]. 2020. Available from: https://github.com/JayakrishnanAjayakumar/SyndromicSurveillance.
