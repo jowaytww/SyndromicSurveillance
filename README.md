@@ -26,7 +26,7 @@ The program accommodates a single cluster definition.  Consequently, it must be 
 Cluster results are generated both as convex hull polygons and as line shape objects to accommodate different visualization tool requirements.
 
 ## Validating your own installation
-The cluster_validation folder contains a synthetic data set of lon/lat points in Cuyahoga County Ohio, USA and the density clustering (DBSCAN) results. A base population was generated from a 1% sample of data originally retrieved from [http://geo.oit.ohio.gov/arcgis/](http://geo.oit.ohio.gov/arcgis/rest/services/LBRS/Cuyahoga_LBRS/FeatureServer/0).
+The cluster_validation folder contains a synthetic data set of lon/lat points in Cuyahoga County Ohio, USA and the density clustering (DBSCAN) results using that data. A base population was generated from a 1% sample of data originally retrieved from [http://geo.oit.ohio.gov/arcgis/](http://geo.oit.ohio.gov/arcgis/rest/services/LBRS/Cuyahoga_LBRS/FeatureServer/0).
 
 Three (3) .csv data source files are included - ‘21day’, ’14day’, and ‘7day’.  These are successive 75% down-samplings from the base to derive a sufficient number of cluster objects to simulate the temporal relationships in multiple look-back time periods.
 
